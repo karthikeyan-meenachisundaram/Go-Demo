@@ -38,22 +38,18 @@ func main() {
 	// load .env (optional — won't fail the run)
 	_ = godotenv.Load() // ignore error; prefer system env in some CI
 
-	// required config
-	mongoURI := os.Getenv("MONGO_URI")
-	if mongoURI == "" {
-		log.Fatal("MONGO_URI not set in env")
-	}
-	dbName = os.Getenv("DB_NAME")
-	if dbName == "" {
-		dbName = "my_db"
-	}
+	// ✅ Hardcode your MongoDB URI and DB name here
+	mongoURI := "mongodb+srv://Karthikeyan:Hema%401199@mycluster.5oolqvy.mongodb.net/"
+	dbName = "my_db"
+
 	fmt.Println("Mongo URI:", mongoURI)
 	fmt.Println("Database Name:", dbName)
-	// allowed origin for CORS (adjust in production)
+	// allowed origin for CORS (still configurable via env if needed)
 	allowedOrigin := os.Getenv("ALLOW_ORIGIN")
 	if allowedOrigin == "" {
 		allowedOrigin = "http://localhost:5173"
 	}
+
 	// PORT
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -74,10 +70,13 @@ func main() {
 	}
 	log.Printf("Connected to MongoDB: %s\n", dbName)
 
-	// ensure disconnect on exit (will run after server shutdown)
+	// ensure disconnect on exit
 	defer func() {
 		_ = mongoClient.Disconnect(context.Background())
 	}()
+
+	// TODO: start your server here (router, handlers, etc.)
+	fmt.Printf("Server running on port %s with allowed origin %s\n", port, allowedOrigin)
 
 	// ----- Gin setup -----
 	gin.SetMode(gin.ReleaseMode) // set Release for less noisy logs in prod; use env to control
