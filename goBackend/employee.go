@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -32,6 +33,8 @@ var mongoClient *mongo.Client
 var dbName string
 
 func main() {
+
+	fmt.Println("Starting Employee Management Backend...")
 	// load .env (optional — won't fail the run)
 	_ = godotenv.Load() // ignore error; prefer system env in some CI
 
@@ -44,6 +47,8 @@ func main() {
 	if dbName == "" {
 		dbName = "my_db"
 	}
+	fmt.Println("Mongo URI:", mongoURI)
+	fmt.Println("Database Name:", dbName)
 	// allowed origin for CORS (adjust in production)
 	allowedOrigin := os.Getenv("ALLOW_ORIGIN")
 	if allowedOrigin == "" {
